@@ -41,9 +41,18 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
-    'corsheaders'
+    'corsheaders',
+    'inventory',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
 
 ]
+ELASTICSEARCH_DSL={
+    'default':{
+        "hosts":"192.168.100.199:9200"
+    }
+}
+
 REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -133,3 +142,8 @@ CORS_ALLOWED_ORIGIN=['*']
 
 STATIC_URL = '/static/'
 AUTH_USER_MODEL='User.User'
+MEDIA_URL='/images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static','images')
+STATICFILES_DIRS=[
+    os.path.join(BASE_DIR,'static','images')
+]

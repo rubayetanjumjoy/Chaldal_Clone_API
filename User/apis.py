@@ -1,5 +1,5 @@
 
-from User.serializers import UserSerializer
+from .serializers import UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import serializers
