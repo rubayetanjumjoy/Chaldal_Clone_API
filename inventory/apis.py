@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import ProductSerializer
-from .models import Product
+from .serializers import *
+from .models import *
 from .ducuments import *
 import json
 import requests
@@ -10,6 +10,18 @@ class ProductList(APIView):
         qs=Product.objects.all()
 
         return Response(ProductSerializer(qs,many=True,context={'request': request}).data)
+class ProductListbyCatagory(APIView):
+      def get(self,request,catagory):
+          qs= Product.objects.filter(catagory__name = catagory)
+
+          return Response(ProductSerializer(qs, many=True, context={'request': request}).data)
+class CatagoryList(APIView):
+    def get(self, request):
+        qs=Catagory.objects.all()
+        print("asd")
+        serializer=CategorySerializer(qs,many=True)
+        return Response(serializer.data)
+
 class SearchProduct(APIView):
 
     def get (self,request):
@@ -44,4 +56,5 @@ class SearchProduct(APIView):
           
 
           return Response(list)
+
 

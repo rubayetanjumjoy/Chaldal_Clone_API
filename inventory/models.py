@@ -2,7 +2,7 @@ from django.db import models
 # Create your models here.
 
 class Product(models.Model):
-    product=models.ForeignKey('Catagory', on_delete=models.CASCADE)
+    catagory=models.ForeignKey('Catagory', on_delete=models.CASCADE)
     title= models.CharField(max_length=200,null=False,blank=False)
     description = models.CharField(max_length=200,blank=True)
     image=models.ImageField()
