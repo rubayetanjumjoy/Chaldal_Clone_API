@@ -27,7 +27,7 @@ class PostDocumentProduct(Document):
         model = Product
 
         fields = [
-
+            'id',
            'title',
            'description',
             'image',
