@@ -34,6 +34,7 @@ class SearchProduct(APIView):
           elasticjson = response.json()
           for row in elasticjson['hits']['hits']:
               dict = {}
+              dict['id'] = row['_source']['id']
               dict['title'] = row['_source']['title']
               dict['description'] = row['_source']['description']
               dict['image'] = f"http://127.0.0.1:8000{row['_source']['image']}"
