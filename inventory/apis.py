@@ -12,7 +12,7 @@ class ProductList(APIView):
         return Response(ProductSerializer(qs,many=True,context={'request': request}).data)
 class ProductListbyCatagory(APIView):
       def get(self,request,catagory):
-          qs= Product.objects.filter(catagory__name = catagory)
+          qs= Product.objects.filter(catagory__slug = catagory)
 
           return Response(ProductSerializer(qs, many=True, context={'request': request}).data)
 class CatagoryList(APIView):
@@ -49,7 +49,7 @@ class SearchProduct(APIView):
               dict['id'] = row['_source']['id']
               dict['title'] = row['_source']['title']
               dict['description'] = row['_source']['description']
-              dict['image'] = f"http://127.0.0.1:8000{row['_source']['image']}"
+              dict['image'] = f"http://192.168.100.199:8002{row['_source']['image']}"
               dict['price'] = row['_source']['price']
               list.append(dict)
 

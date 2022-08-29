@@ -12,6 +12,7 @@ class Product(models.Model):
 
 class Catagory(models.Model):
     name= models.CharField(max_length=200,null=False,blank=False)
+    slug = models.SlugField(max_length=40)
     
 
 
