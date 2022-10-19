@@ -123,10 +123,18 @@ class UpdateAddress(APIView):
 
                 Address.objects.create(address=user.first(),street_address=request.data['street_address'],floor_no=request.data['floor_no'],apartment_no=request.data['apartment_no'])
 
-                qs = Address.objects.filter(address=user.first())
-                serializer = AddressSerializer(qs,many=True)
 
-                return Response(serializer.data)
+                serializer = UserSerializer(user.first(), many=False)
+                qs = Address.objects.filter(address=user.first())
+                serializeraddr = AddressSerializer(qs, many=True)
+
+                context = {
+                    "user": serializer.data,
+                    "token": str(token),
+                    "address": serializeraddr.data
+                }
+
+                return Response(context)
             return Response("invalid")
 
         def put(self, request, id):
@@ -136,14 +144,23 @@ class UpdateAddress(APIView):
 
                Address.objects.filter(pk=id).update(street_address=request.data['street_address'],floor_no=request.data['floor_no'], apartment_no=request.data['apartment_no'])
                qs = Address.objects.filter(pk=id)
-               serializer = AddressSerializer(qs, many=True)
+               serializeraddr = AddressSerializer(qs, many=True)
+               serializer = UserSerializer(user.first(), many=False)
+
+
+               context = {
+                   "user": serializer.data,
+                   "token": str(token),
+                   "address": serializeraddr.data
+               }
+
+               return Response(context)
 
 
 
 
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        '''
+            '''
 
         def get(self, request):
             token = request.data['token']
