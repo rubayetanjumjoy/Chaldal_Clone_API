@@ -1,5 +1,7 @@
 import http
 
+
+
 from .serializers import UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -63,13 +65,26 @@ class SendOTP(APIView):
 
 class VerifyOTP(APIView):
      def post(self,request):
+
          try:
              user=User.objects.get(phone_number=request.data['phone_number'])
+
+
              if user.otp==request.data['otp']:
                  user.is_otp_verified=True
                  token_obj, _ = Token.objects.get_or_create(user=user)
                  user.save()
-                 return Response({'name':user.name,'email':user.email,'gender':user.gender,'date_of_birth':user.date_of_birth,'phone_number':user.phone_number, 'token': str(token_obj)})
+                 serializer = UserSerializer(user, many=False)
+                 qs = Address.objects.filter(address=user)
+                 serializeraddr = AddressSerializer(qs, many=True)
+
+
+                 context={
+                     "user":serializer.data,
+                     "token":str(token_obj),
+                     "address":serializeraddr.data
+                 }
+                 return Response(context)
          except:
              return Response({"Wrong OTP"})
 class UpdateUser(APIView):
@@ -128,6 +143,7 @@ class UpdateAddress(APIView):
 
 
             return Response(serializer.data, status=status.HTTP_200_OK)
+        '''
 
         def get(self, request):
             token = request.data['token']
@@ -138,3 +154,4 @@ class UpdateAddress(APIView):
                 return Response(serializer.data)
             return Response("Does Not Exist")
 
+        '''

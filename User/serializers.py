@@ -4,7 +4,7 @@ from rest_framework import fields, serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model =User
-        fields='__all__'
+        fields=['email','name','phone_number','gender','date_of_birth']
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model =Address
