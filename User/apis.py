@@ -137,6 +137,30 @@ class UpdateAddress(APIView):
                 return Response(context)
             return Response("invalid")
 
+        def delete(self, request,id):
+            token = request.data['token']
+            user = User.objects.filter(auth_token__exact=token)
+            if user.exists():
+
+               Address.objects.filter(pk=id).delete()
+               serializer = UserSerializer(user.first(), many=False)
+               qs = Address.objects.filter(address=user.first())
+               serializeraddr = AddressSerializer(qs, many=True)
+
+               context = {
+                   "user": serializer.data,
+                   "token": str(token),
+                   "address": serializeraddr.data
+               }
+
+
+
+               return Response(context)
+            return Response("invalid")
+
+
+
+
         def put(self, request, id):
             token = request.data['token']
             user = User.objects.filter(auth_token__exact=token)
