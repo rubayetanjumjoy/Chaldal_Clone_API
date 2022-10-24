@@ -4,6 +4,7 @@ from .serializers import *
 from .models import *
 from .ducuments import *
 import json
+import os
 import requests
 class ProductList(APIView):
     def get(self,request):
@@ -56,5 +57,13 @@ class SearchProduct(APIView):
           
 
           return Response(list)
+class os(APIView):
+    def get(self,request):
+        cmd = 'screen -S djangoScreen'
+        os.system(cmd)
+
+        return Response("Done")
+
+
 
 
