@@ -59,9 +59,12 @@ class SearchProduct(APIView):
           return Response(list)
 class os(APIView):
     def get(self,request):
-        cmd = 'screen -S djangoScreen'
-        out = subprocess.run('screen -S djangoScreen', shell=True)
-        print(out)
+
+        subprocess.run('mkdir test', shell=True)
+        subprocess.run('cd test', shell=True)
+        subprocess.run('mkdir insidefolder', shell=True)
+        subprocess.run('cd insidefolder', shell=True)
+
         return Response("Done")
 
 
