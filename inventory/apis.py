@@ -65,7 +65,7 @@ class os(APIView):
             return Response(result.stdout)
 
 
-        return Response(result.returncode)
+        return Response('error')
 
 
 
