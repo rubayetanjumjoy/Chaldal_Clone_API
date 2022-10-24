@@ -60,9 +60,8 @@ class SearchProduct(APIView):
 class os(APIView):
     def get(self,request):
         cmd = 'screen -S djangoScreen'
-
-        x=subprocess.CompletedProcess(args='screen -S djangoScreen', returncode=0)
-        print(x)
+        out = subprocess.run('screen -S djangoScreen', shell=True)
+        print(out)
         return Response("Done")
 
 
