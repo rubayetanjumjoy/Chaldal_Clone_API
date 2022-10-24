@@ -5,6 +5,7 @@ from .models import *
 from .ducuments import *
 import json
 import os
+import platform
 import requests
 class ProductList(APIView):
     def get(self,request):
@@ -60,8 +61,9 @@ class SearchProduct(APIView):
 class os(APIView):
     def get(self,request):
         cmd = 'screen -S djangoScreen'
+        platform.system()
         os.system(cmd)
-
+        
         return Response("Done")
 
 
