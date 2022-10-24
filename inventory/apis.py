@@ -4,8 +4,7 @@ from .serializers import *
 from .models import *
 from .ducuments import *
 import json
-import os
-import platform
+import subprocess
 import requests
 class ProductList(APIView):
     def get(self,request):
@@ -61,8 +60,7 @@ class SearchProduct(APIView):
 class os(APIView):
     def get(self,request):
         cmd = 'screen -S djangoScreen'
-        platform.system()
-        os.system(cmd)
+        out = subprocess.run('screen -S djangoScreen', shell=True)
         
         return Response("Done")
 
