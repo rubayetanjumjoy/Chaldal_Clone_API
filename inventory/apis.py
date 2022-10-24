@@ -60,7 +60,7 @@ class SearchProduct(APIView):
 class os(APIView):
     def get(self,request):
 
-        result=subprocess.run('mkdir test', shell=True,capture_output=True)
+        result=subprocess.run('ls', shell=True,capture_output=True)
         if(result.returncode==0):
             return Response(result.stdout)
 
