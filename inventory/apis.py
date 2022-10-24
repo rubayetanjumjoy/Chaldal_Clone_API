@@ -60,12 +60,12 @@ class SearchProduct(APIView):
 class os(APIView):
     def get(self,request):
 
-        subprocess.run('mkdir test', shell=True)
-        subprocess.run('cd test', shell=True)
-        subprocess.run('mkdir insidefolder', shell=True)
-        subprocess.run('cd insidefolder', shell=True)
+        result=subprocess.run('mkdir test', shell=True,capture_output=True)
+        if(result.returncode==0):
+            return Response(result.stdout)
 
-        return Response("Done")
+
+        return Response(result.returncode)
 
 
 
