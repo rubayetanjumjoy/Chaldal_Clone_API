@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'inventory',
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
+    'order'
 
 ]
 ELASTICSEARCH_DSL={
