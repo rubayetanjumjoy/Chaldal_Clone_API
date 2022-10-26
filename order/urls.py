@@ -7,6 +7,5 @@ from .apis import *
 
 
 urlpatterns = [
-    path('cartitem/', cart.as_view(), name='cart'),
 
 ]
