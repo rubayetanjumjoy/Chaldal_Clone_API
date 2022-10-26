@@ -10,5 +10,6 @@ class orderItem(models.Model):
     product=models.ForeignKey(Product,on_delete=models.CASCADE,blank=True,null=True)
 
     quantity=models.PositiveIntegerField()
+    shipment_id=models.CharField(max_length=15,blank=True,null=True)
     def __str__(self):
         return f"{self.user.name}"
