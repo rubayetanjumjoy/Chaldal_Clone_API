@@ -12,10 +12,7 @@ class cart(models.Model):
 
 
     def __str__(self):
-        return "{} - {} - {} - {} - {}".format(self.user,
-                                               self.item,
-                                               self.quantity,
-                                                )
+        return str(self.user.name)
 
 
 
