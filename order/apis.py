@@ -7,6 +7,7 @@ from .serializer import OrderSerializer
 from .models import orderItem
 from User.serializers import UserSerializer
 from inventory.serializers import ProductSerializer
+from User.serializers import AddressSerializer
 import uuid
 import requests
 class Order(APIView):
@@ -18,6 +19,7 @@ class Order(APIView):
         list = []
 
         for id in shipid:
+            totalprice=0
             dict={}
             dict["shipment_id"]=id["shipment_id"]
 
@@ -26,7 +28,7 @@ class Order(APIView):
             list.append(dict)
 
             for data in qs:
-                totalprice=0
+
                 dict2={
                     "id":data.id,
                     "quantity":data.quantity,
@@ -34,10 +36,12 @@ class Order(APIView):
 
                     "product" : ProductSerializer(data.product).data,
                     "user" : UserSerializer(data.user).data,
+                    "address":AddressSerializer(data.address).data
 
                 }
-
+                totalprice+=int(data.total_price)
                 list2.append(dict2)
+            dict['totalprice']=totalprice
 
             dict["items"]=list2
 
