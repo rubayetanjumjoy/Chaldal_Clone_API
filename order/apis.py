@@ -12,10 +12,12 @@ import uuid
 import requests
 class Order(APIView):
     def get(self,request):
+        token=request.META.get(
+            'HTTP_TOKEN')
 
-        qs=orderItem.objects.filter(user__auth_token=request.data['token'])
+        qs=orderItem.objects.filter(user__auth_token=token)
         serializer=OrderSerializer(qs,many=True)
-        shipid=orderItem.objects.filter(user__auth_token=request.data['token']).values('shipment_id').distinct()
+        shipid=orderItem.objects.filter(user__auth_token=token).values('shipment_id').distinct()
         list = []
 
         for id in shipid:
