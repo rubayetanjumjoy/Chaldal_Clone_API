@@ -12,5 +12,9 @@ class orderItem(models.Model):
     quantity=models.PositiveIntegerField()
     shipment_id=models.CharField(max_length=15,blank=True,null=True)
     total_price=models.CharField(max_length=200,blank=True,null=True)
+    delivery_date=models.CharField(max_length=200,blank=True,null=True)
+    timeslot=models.CharField(max_length=200,blank=True,null=True)
+
+
     def __str__(self):
         return f"{self.user.name}"

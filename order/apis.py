@@ -8,16 +8,17 @@ from .models import orderItem
 from User.serializers import UserSerializer
 from inventory.serializers import ProductSerializer
 from User.serializers import AddressSerializer
+from User.models import Address
 import uuid
 import requests
 class Order(APIView):
     def get(self,request):
         token=request.META.get(
             'HTTP_TOKEN')
-
+        auth=User.objects.get(auth_token=token)
         qs=orderItem.objects.filter(user__auth_token=token)
 
-        if qs:
+        if auth:
             shipid=orderItem.objects.filter(user__auth_token=token).values('shipment_id').distinct()
             list = []
 
@@ -45,6 +46,9 @@ class Order(APIView):
                     totalprice+=int(data.total_price)
                     list2.append(dict2)
                 dict['totalprice']=totalprice
+                dict['timeslot'] = qs[0].timeslot
+                dict['delivery_date'] = qs[0].delivery_date
+
                 dict["user"] = UserSerializer(qs[0].user).data
                 dict["address"] = AddressSerializer(qs[0].address).data
                 dict["items"]=list2
@@ -77,6 +81,10 @@ class Order(APIView):
         uu = User.objects.get(auth_token=token)
         if uu:
             cart = request.data['cart']
+            address = request.data['address']
+            address_id=address['id']
+            timeslot = request.data['timeslot']
+            delivery_date = request.data['delivery_date']
             print(cart)
             list = []
             total_price = 0
@@ -93,8 +101,9 @@ class Order(APIView):
 
                 uu = User.objects.get(auth_token=token)
                 prod = Product.objects.get(pk=prodid)
+                addrd=Address.objects.get(pk=address_id)
                 data = orderItem.objects.create(user=uu, product=prod, quantity=quantity, shipment_id=shipment_id,
-                                                total_price=prod.price * quantity)
+                                                total_price=prod.price * quantity,address=addrd,timeslot=timeslot,delivery_date=delivery_date)
                 qs = orderItem.objects.filter(shipment_id=shipment_id)
                 list2 = []
 
@@ -112,6 +121,8 @@ class Order(APIView):
 
                     list2.append(dict2)
                 dict['totalprice']= total_price
+                dict["timeslot"] = qs[0].timeslot
+                dict["delivery_date"] = qs[0].delivery_date
                 dict["user"]=UserSerializer(qs[0].user).data
                 dict["address"] = AddressSerializer(qs[0].address).data
                 dict["items"] = list2
