@@ -16,37 +16,43 @@ class Order(APIView):
             'HTTP_TOKEN')
 
         qs=orderItem.objects.filter(user__auth_token=token)
-        serializer=OrderSerializer(qs,many=True)
-        shipid=orderItem.objects.filter(user__auth_token=token).values('shipment_id').distinct()
-        list = []
 
-        for id in shipid:
-            totalprice=0
-            dict={}
-            dict["shipment_id"]=id["shipment_id"]
+        if qs:
+            shipid=orderItem.objects.filter(user__auth_token=token).values('shipment_id').distinct()
+            list = []
 
-            qs = orderItem.objects.filter(shipment_id=id['shipment_id'])
-            list2=[]
-            list.append(dict)
+            for id in shipid:
+                totalprice=0
+                dict={}
+                dict["shipment_id"]=id["shipment_id"]
 
-            for data in qs:
+                qs = orderItem.objects.filter(shipment_id=id['shipment_id'])
+                list2=[]
+                list.append(dict)
 
-                dict2={
-                    "id":data.id,
-                    "quantity":data.quantity,
-                    "total_price" : data.total_price,
+                for data in qs:
 
-                    "product" : ProductSerializer(data.product).data,
-                    "user" : UserSerializer(data.user).data,
-                    "address":AddressSerializer(data.address).data
+                    dict2={
+                        "id":data.id,
+                        "quantity":data.quantity,
+                        "total_price" : data.total_price,
 
-                }
-                totalprice+=int(data.total_price)
-                list2.append(dict2)
-            dict['totalprice']=totalprice
+                        "product" : ProductSerializer(data.product).data,
 
-            dict["items"]=list2
 
+
+                    }
+                    totalprice+=int(data.total_price)
+                    list2.append(dict2)
+                dict['totalprice']=totalprice
+                dict["user"] = UserSerializer(qs[0].user).data
+                dict["address"] = AddressSerializer(qs[0].address).data
+                dict["items"]=list2
+
+
+            return Response(list)
+        else:
+            return Response("Invalid Token")
 
         '''
        
@@ -64,45 +70,52 @@ class Order(APIView):
 
             list.append(dict)
         '''
-        return Response(list)
+
 
     def post(self, request):
-        payload=request.data['payload']
-        print(payload)
-        list = []
-        total_price = 0
+        token = request.META.get('HTTP_TOKEN')
+        uu = User.objects.get(auth_token=token)
+        if uu:
+            cart = request.data['cart']
+            print(cart)
+            list = []
+            total_price = 0
 
-        shipment_id = uuid.uuid4().hex[:8]
-        dict = {}
-        dict["shipment_id"] = shipment_id
-        list.append(dict)
+            shipment_id = uuid.uuid4().hex[:8]
+            dict = {}
+            dict["shipment_id"] = shipment_id
+            list.append(dict)
 
-        for data in payload:
-            token=data["token"]
-            prodid=data['product_id']
-            quantity=data['quantity']
+            for data in cart:
 
-            uu = User.objects.get(auth_token=token)
-            prod = Product.objects.get(pk=prodid)
-            data = orderItem.objects.create(user=uu, product=prod, quantity=quantity,shipment_id=shipment_id,total_price=prod.price*quantity)
-            qs = orderItem.objects.filter(shipment_id=shipment_id)
-            list2=[]
+                prodid = data['id']
+                quantity = data['quantity']
 
-            for data in qs:
+                uu = User.objects.get(auth_token=token)
+                prod = Product.objects.get(pk=prodid)
+                data = orderItem.objects.create(user=uu, product=prod, quantity=quantity, shipment_id=shipment_id,
+                                                total_price=prod.price * quantity)
+                qs = orderItem.objects.filter(shipment_id=shipment_id)
+                list2 = []
 
-                dict2 = {
-                    "id": data.id,
-                    "quantity": data.quantity,
-                    "total_price": data.total_price,
+                for data in qs:
+                    dict2 = {
+                        "id": data.id,
+                        "quantity": data.quantity,
+                        "total_price": data.total_price,
 
-                    "product": ProductSerializer(data.product).data,
-                    "user": UserSerializer(data.user).data,
-
-                }
-
-                list2.append(dict2)
+                        "product": ProductSerializer(data.product).data,
 
 
-            dict["items"] = list2
+                    }
+                    total_price+=int(data.total_price)
 
-        return Response(list)
+                    list2.append(dict2)
+                dict['totalprice']= total_price
+                dict["user"]=UserSerializer(qs[0].user).data
+                dict["address"] = AddressSerializer(qs[0].address).data
+                dict["items"] = list2
+
+            return Response(dict)
+        else:
+            return Response("Invalid Token")
