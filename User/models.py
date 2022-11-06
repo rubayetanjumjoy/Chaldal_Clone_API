@@ -62,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Address(models.Model):
     address=models.ForeignKey(User,on_delete=models.CASCADE)
     street_address=models.CharField(max_length=200,null=True,blank=True)
-    floor_no=models.IntegerField(null=True,blank=True)
+    floor_no=models.CharField(max_length=200,null=True,blank=True)
     apartment_no=models.CharField(max_length=200,null=True,blank=True)
     def __str__(self):
         return str(self.street_address)
