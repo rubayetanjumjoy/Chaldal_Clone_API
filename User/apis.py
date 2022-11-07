@@ -36,30 +36,39 @@ class SendOTP(APIView):
     def post(self,request):
         serializer = UserSerializer(data=request.data)
 
-
+        account_sid = 'ACed6f2340b442f747403a7abadc8f4743'
+        auth_token = '699213a54cabd9b0e6236b9cd8b45195'
+        client = Client(account_sid, auth_token)
         if serializer.is_valid():
             serializer.save()
             user = User.objects.get(phone_number=request.data['phone_number'])
             user.name = user.phone_number
             user.otp = generateOTP()
             user.save()
+
+
+
+            message = client.messages.create(
+                body=f'your verification code is {user.otp} ',
+                from_='+13149485581',
+                to=user.phone_number
+            )
+
+            print(message.sid)
             return Response(f"OTP Send to {request.data['phone_number']} ")
         else:
             user = User.objects.get(phone_number=request.data['phone_number'])
             user.otp = generateOTP()
             user.save()
+            message = client.messages.create(
+                body=f'your verification code is {user.otp} ',
+                from_='+13149485581',
+                to=user.phone_number
+            )
+            print(message.sid)
             return Response(f"OTP Send to {request.data['phone_number']} ")
-        account_sid = 'ACed6f2340b442f747403a7abadc8f4743'
-        auth_token = '23a5cb7e6ba0e9b09281c4de70e8256c'
-        client = Client(account_sid, auth_token)
 
-        message = client.messages.create(
-            from_='+14348305596',
-            body=f'Your Two step verifaction code is {user.otp}',
-            to=user.phone_number
-        )
 
-        print(message.sid)
 
         return Response("Error")
 
