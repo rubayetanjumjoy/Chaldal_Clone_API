@@ -20,6 +20,7 @@ class ProductListbyCatagory(APIView):
           return Response(ProductSerializer(qs, many=True, context={'request': request}).data)
 class CatagoryList(APIView):
     def get(self, request):
+
         qs=Catagory.objects.all()
         print("asd")
         serializer=CategorySerializer(qs,many=True)
@@ -29,7 +30,10 @@ class SearchProduct(APIView):
 
     def get (self,request):
           searchkey = request.GET.get('q')
-          qs = Product.objects.filter(title__contains=searchkey)
+          lstripsearchKey=searchkey.lstrip()
+          if(len(lstripsearchKey)==0):
+              return Response({"result":"No Result Found"})
+          qs = Product.objects.filter(title__contains=lstripsearchKey)
 
 
           serializer = ProductSerializer(qs, many=True, context={'request': request}).data
