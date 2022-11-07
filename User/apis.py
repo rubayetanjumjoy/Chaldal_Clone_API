@@ -37,7 +37,7 @@ class SendOTP(APIView):
         serializer = UserSerializer(data=request.data)
 
         account_sid = 'ACed6f2340b442f747403a7abadc8f4743'
-        auth_token = '699213a54cabd9b0e6236b9cd8b45195'
+        auth_token = '402ec10b06de8c950e3f1e2fb6a885a4'
         client = Client(account_sid, auth_token)
         if serializer.is_valid():
             serializer.save()
