@@ -53,7 +53,7 @@ INSTALLED_APPS = [
 ]
 ELASTICSEARCH_DSL={
     'default':{
-        "hosts":"13.229.79.105:9200"
+        "hosts":"3.0.95.128:9200"
     }
 }
 

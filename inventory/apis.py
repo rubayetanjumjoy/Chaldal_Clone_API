@@ -41,7 +41,7 @@ class SearchProduct(APIView):
               list.append(dict)
           """
           elasticquery = {"query": {"fuzzy": {"title": {"value": f"{searchkey}", "fuzziness": 2}}}}
-          response = requests.get("http://13.229.79.105:9200/products/_search", json=elasticquery)
+          response = requests.get("http://3.0.95.128:9200/products/_search", json=elasticquery)
 
           list = []
           elasticjson = response.json()
@@ -50,7 +50,7 @@ class SearchProduct(APIView):
               dict['id'] = row['_source']['id']
               dict['title'] = row['_source']['title']
               dict['description'] = row['_source']['description']
-              dict['image'] = f"http://13.229.79.105:8000{row['_source']['image']}"
+              dict['image'] = f"http://18.139.114.65:8000{row['_source']['image']}"
               dict['price'] = row['_source']['price']
               list.append(dict)
 

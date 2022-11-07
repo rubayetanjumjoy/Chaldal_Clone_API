@@ -49,7 +49,7 @@ class SendOTP(APIView):
             user.otp = generateOTP()
             user.save()
             return Response(f"OTP Send to {request.data['phone_number']} ")
-        """account_sid = 'ACed6f2340b442f747403a7abadc8f4743'
+        account_sid = 'ACed6f2340b442f747403a7abadc8f4743'
         auth_token = '23a5cb7e6ba0e9b09281c4de70e8256c'
         client = Client(account_sid, auth_token)
 
@@ -59,7 +59,7 @@ class SendOTP(APIView):
             to=user.phone_number
         )
 
-        print(message.sid)"""
+        print(message.sid)
 
         return Response("Error")
 
