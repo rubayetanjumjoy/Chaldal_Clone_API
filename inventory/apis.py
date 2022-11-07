@@ -1,3 +1,5 @@
+from itertools import product
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import *
@@ -27,6 +29,11 @@ class SearchProduct(APIView):
 
     def get (self,request):
           searchkey = request.GET.get('q')
+          qs = Product.objects.filter(title__contains=searchkey)
+
+
+          serializer = ProductSerializer(qs, many=True, context={'request': request}).data
+
           """
           search=PostDocumentProduct.search().query('multi_match', query=searchkey,fields=['title',],fuzziness='auto')
           list=[]
@@ -40,6 +47,7 @@ class SearchProduct(APIView):
               dict['price']=hit.price
               list.append(dict)
           """
+          '''
           elasticquery = {"query": {"fuzzy": {"title": {"value": f"{searchkey}", "fuzziness": 2}}}}
           response = requests.get("http://3.0.95.128:9200/products/_search", json=elasticquery)
 
@@ -54,9 +62,9 @@ class SearchProduct(APIView):
               dict['price'] = row['_source']['price']
               list.append(dict)
 
-          
+          '''
 
-          return Response(list)
+          return Response(serializer)
 class os(APIView):
     def get(self,request):
 
